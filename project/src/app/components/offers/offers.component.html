@@ -4,11 +4,10 @@
 
     <button class="btn btn-lg btn-outline-primary" (click)="open(content)">ADD OFFER</button>
 
-    <app-offer *ngFor="let off of dummy_offer"
-        [discount]="off.discount"
-        [price]="off.price"
-        [startDate]="off.startDate"
-        [endDate]="off.endDate">
+    <app-offer *ngFor="let off of dummy_offer;let indexOfOffer=index;"
+        [offer] = "off"
+        (offerDelete)="deleteOffer($event)"
+        (offerModify)="modifyOffer($event,indexOfOffer)">
     </app-offer>
 </div>
 
@@ -41,6 +40,6 @@
       </form>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-outline-dark" (onClick)="saveOffer()" >Save</button>
+        <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button>
     </div>
   </ng-template>
