@@ -1,0 +1,46 @@
+<div>
+
+    <h2>OFFERS PAGE</h2>
+
+    <button class="btn btn-lg btn-outline-primary" (click)="open(content)">ADD OFFER</button>
+
+    <app-offer *ngFor="let off of dummy_offer"
+        [discount]="off.discount"
+        [price]="off.price"
+        [startDate]="off.startDate"
+        [endDate]="off.endDate">
+    </app-offer>
+</div>
+
+
+<ng-template #content let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Add Offer</h4>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup] = "addOfferForm">
+        <div class="mb-3">
+          <label for="price" class="form-label">Price : </label>
+          <input type="number" class="form-control" formControlName="price" />
+          
+          <label for="discount" class="form-label">Discount : </label>
+          <input type="number" class="form-control" formControlName="discount" />
+          
+          <label for="startDate" class="form-label">Start Date</label>
+          <div class="input-group">
+            <input id="startDate" class="form-control" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker #dp="ngbDatepicker" formControlName="startDate">
+            <button class="btn btn-outline-secondary calendar" (click)="dp.toggle()" type="button"></button>
+          </div>
+          <label for="endDate" class="form-label">End Date</label>
+          <div class="input-group">
+            <input id="endDate" class="form-control" placeholder="yyyy-mm-dd" name="dp1" ngbDatepicker #dp1="ngbDatepicker" formControlName="endDate">
+            <button class="btn btn-outline-secondary calendar" (click)="dp1.toggle()" type="button"></button>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-outline-dark" (onClick)="saveOffer()" >Save</button>
+    </div>
+  </ng-template>
