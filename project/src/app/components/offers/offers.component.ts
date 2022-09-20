@@ -116,6 +116,8 @@ export class OffersComponent implements OnInit {
 
   public modifyOffer(offer : Offer,index : any) {
 
+    if(offer.discount <= 0 || offer.discount >= 100 || offer.price <= 0) return;
+    
     this.dummy_offer[index].price = offer.price;
     this.dummy_offer[index].discount = offer.discount;
     this.dummy_offer[index].startDate = offer.startDate;

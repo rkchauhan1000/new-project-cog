@@ -15,7 +15,8 @@ export class OfferComponent implements OnInit {
 
   @Input()
   offer: Offer = new Offer;
-  temp_offer : Offer = this.offer;
+  temp_offer : Offer = new Offer;
+
   @Output() offerDelete : EventEmitter<Offer> = new EventEmitter();
   @Output() offerModify : EventEmitter<Offer> = new EventEmitter();
 
@@ -29,6 +30,10 @@ export class OfferComponent implements OnInit {
   // public modal_value: Offer = new Offer;
 
   ngOnInit(): void {
+    this.temp_offer.price = this.offer.price;
+    this.temp_offer.discount = this.offer.discount; 
+    this.temp_offer.startDate = this.offer.startDate;
+    this.temp_offer.endDate = this.offer.endDate;
   }
 
   addOfferForm = new FormGroup({
@@ -57,8 +62,8 @@ export class OfferComponent implements OnInit {
 
     console.log(result);
     
-    let new_offer : Offer = {price : this.offer.price ,discount : this.offer.discount, startDate : this.offer.startDate, endDate : this.offer.endDate};
-    this.offerModify.emit(new_offer);
+    // let new_offer : Offer = {price : this.offer.price ,discount : this.offer.discount, startDate : this.offer.startDate, endDate : this.offer.endDate};
+    this.offerModify.emit(this.temp_offer);
 
   }, (reason) => {
     console.log(reason);

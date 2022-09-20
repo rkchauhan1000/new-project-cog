@@ -27,14 +27,14 @@
       <form>
         <div class="mb-3">
           <label for="price" class="form-label">Price : </label>
-          <input type="number" class="form-control" (keyup)="onKeyPrice($event)" min="1" [(ngModel)]="offer.price" name="price" />
+          <input type="number" class="form-control" (keyup)="onKeyPrice($event)" min="1" [(ngModel)]="temp_offer.price" name="price" />
           
           <label for="discount" class="form-label">Discount : </label>
-          <input type="number" class="form-control" (keyup)="onKeyDiscount($event)" max="99" min="1" minlength="1" maxlength="2" [(ngModel)]="offer.discount" name="discount"/>
+          <input type="number" class="form-control" (keyup)="onKeyDiscount($event)" max="99" min="1" minlength="1" maxlength="2" [(ngModel)]="temp_offer.discount" name="discount"/>
           
           <label for="startDate" class="form-label">Start Date</label>
           <br />
-          <ngb-datepicker #dp [(ngModel)]="offer.startDate" (navigate)="date1 = $event.next" name="startDate"></ngb-datepicker>
+          <ngb-datepicker #dp [(ngModel)]="temp_offer.startDate" (navigate)="date1 = $event.next" name="startDate"></ngb-datepicker>
           <br />
           <!-- <div class="input-group">
             <input id="startDate" class="form-control" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker #dp="ngbDatepicker" formControlName="startDate">
@@ -47,7 +47,7 @@
           </div> -->
           <label for="endDate" class="form-label">End Date</label>
           <br />
-          <ngb-datepicker #dp [(ngModel)]="offer.endDate" (navigate)="date2 = $event.next" 
+          <ngb-datepicker #dp [(ngModel)]="temp_offer.endDate" (navigate)="date2 = $event.next" 
           [minDate]="model" name="endDate"></ngb-datepicker>
 
         </div>
