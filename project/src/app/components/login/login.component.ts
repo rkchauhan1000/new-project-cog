@@ -44,11 +44,15 @@ export class LoginComponent implements OnInit {
     {
       console.log("Logged In !!");
       localStorage.setItem("user",this.loginForm.value.email);
+      window.alert("Successfully logged in !!")
       this.router.navigate(['/offersPage']);
     }
     else
     {
       console.log("Not Logged In !!");
+      window.alert("Email or password incorrect..")
+      // this.showDanger();
     }
   }
+
 }

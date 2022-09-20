@@ -37,6 +37,12 @@ export class OffersComponent implements OnInit {
   //   { discount : "15",price : "10500", startDate : "9" ,endDate : "20"}
   // ]; 
   public dummy_offer : Array<Offer> = [];
+
+  logout(){
+    localStorage.removeItem('user');
+    window.alert("Successfully logged out !!")
+    this.router.navigate(['/login']);
+  }
   open(content : any) {
     this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
@@ -68,7 +74,7 @@ export class OffersComponent implements OnInit {
       if(curr_price <= 0 || curr_discount <= 0 || curr_discount >= 100) return;
 
       this.dummy_offer.push({discount :temp_discount,price : temp_price,startDate : temp_startDate,endDate : temp_endDate});
-
+      window.alert("Offer added successfully !!")
     }, (reason) => {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
     });
@@ -116,17 +122,34 @@ export class OffersComponent implements OnInit {
   public deleteOffer(offer : Offer) {
     const index = this.dummy_offer.indexOf(offer);
     this.dummy_offer.splice(index,1);
+    window.alert("Offer deleted successfully !!")
   }
 
   public modifyOffer(offer : Offer,index : any) {
 
-    if(offer.discount <= 0 || offer.discount >= 100 || offer.price <= 0) return;
+    if(offer.discount <= 0 || offer.discount >= 100)
+    {
+      window.alert("Discount should be between 0 and 100");
+      return;
+    } 
+    
+    if(offer.price <= 0){
+      window.alert("Price should be greater than 0");
+      return;
+    } 
+
+    if((offer.startDate.year > offer.endDate.year) || ((offer.startDate.year == offer.endDate.year) && (offer.startDate.month > offer.endDate.month)) || ((offer.startDate.year == offer.endDate.year) && (offer.startDate.month == offer.endDate.month) && (offer.startDate.day > offer.endDate.day)))
+    {
+      window.alert("Start Date should be less than End Date !!");
+      return;
+    }
 
     this.dummy_offer[index].price = offer.price;
     this.dummy_offer[index].discount = offer.discount;
     this.dummy_offer[index].startDate = offer.startDate;
     this.dummy_offer[index].endDate = offer.endDate;
 
+    window.alert("Offer updated successfully !!")
   }
 
   public onKeyPrice(event : any) {this.modal_value.price = event.target.value;}
