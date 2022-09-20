@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl,FormGroup ,Validators} from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -8,8 +9,11 @@ import { FormControl,FormGroup ,Validators} from '@angular/forms';
 })
 export class LoginComponent implements OnInit {
 
-  constructor() {
+  constructor(private router : Router) {
     
+    var user = localStorage.getItem('user');
+
+    if(user) router.navigate(['/offersPage']);
   }
 
   ngOnInit(): void {
@@ -39,6 +43,8 @@ export class LoginComponent implements OnInit {
     if(this.loginForm.value.email === this.email_auth && this.loginForm.value.password === this.password_auth)
     {
       console.log("Logged In !!");
+      localStorage.setItem("user",this.loginForm.value.email);
+      this.router.navigate(['/offersPage']);
     }
     else
     {

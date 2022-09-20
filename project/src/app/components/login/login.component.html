@@ -1,24 +1,27 @@
-<form [formGroup] = "loginForm" (ngSubmit) = "submitForm()">
-    <div class="container">
-        <label for="email" class="form-label"><b>Email</b></label>
-        <input type="email" class="form-control" id="email" formControlName="email">
-        <div class="danger" *ngIf = "Email.errors ?.['required'] && (Email.dirty || Email.touched)">
-            Email is required
+<div style="height: 40vh;width: 60vw;justify-content: center">
+    <form [formGroup] = "loginForm" (ngSubmit) = "submitForm()">
+        <div class="container">
+            <label for="email" class="form-label"><b>Email</b></label>
+            <input type="email" class="form-control" id="email" formControlName="email">
+            <div class="danger" *ngIf = "Email.errors ?.['required'] && (Email.dirty || Email.touched)">
+                Email is required
+            </div>
+            <div class="danger" *ngIf = "Email.errors ?.['email'] && (Email.dirty || Email.touched)">
+                Email is invalid
+            </div>
+            <br />
+            <label for="psw" class="form-label"><b>Password</b></label>
+            <input type="password" class="form-control" id="password" formControlName="password">
+            <div class="danger" *ngIf = "Password.errors ?.['required'] && (Password.dirty || Password.touched)">
+                Password is required
+            </div>
+            <div class="danger" *ngIf = "Password.errors ?.['minlength'] || Password.errors ?.['maxlength'] && (Password.dirty || Password.touched)">
+                Password length should be between 6 and 15 characters
+            </div>       
+            <button type="submit">Login</button>
         </div>
-        <div class="danger" *ngIf = "Email.errors ?.['email'] && (Email.dirty || Email.touched)">
-            Email is invalid
-        </div>
-        <br />
-        <label for="psw" class="form-label"><b>Password</b></label>
-        <input type="password" class="form-control" id="password" formControlName="password">
-        <div class="danger" *ngIf = "Password.errors ?.['required'] && (Password.dirty || Password.touched)">
-            Password is required
-        </div>
-        <div class="danger" *ngIf = "Password.errors ?.['minlength'] || Password.errors ?.['maxlength'] && (Password.dirty || Password.touched)">
-            Password length should be between 6 and 15 characters
-        </div>       
-        <button type="submit">Login</button>
-    </div>
-</form>
+    </form>
+</div>
+
 
   

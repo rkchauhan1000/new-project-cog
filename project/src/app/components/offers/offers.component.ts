@@ -2,7 +2,7 @@ import { Component, OnInit,EventEmitter, Output } from '@angular/core';
 import {NgbModal, ModalDismissReasons,NgbDateStruct, NgbCalendar} from '@ng-bootstrap/ng-bootstrap';
 import { FormControl,FormGroup ,Validators} from '@angular/forms';
 import { Offer } from 'src/app/Offer';
-
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-offers',
   templateUrl: './offers.component.html',
@@ -12,7 +12,11 @@ export class OffersComponent implements OnInit {
 
   closeResult = '';
   public isCollapsed = true;
-  constructor(private modalService: NgbModal,private calendar: NgbCalendar) {}
+  constructor(private modalService: NgbModal,private calendar: NgbCalendar,private router : Router) {
+    var user = localStorage.getItem('user');
+
+    if(!user) router.navigate(['/login']);
+  }
 
   model!: NgbDateStruct;
   model1!: NgbDateStruct;
@@ -117,7 +121,7 @@ export class OffersComponent implements OnInit {
   public modifyOffer(offer : Offer,index : any) {
 
     if(offer.discount <= 0 || offer.discount >= 100 || offer.price <= 0) return;
-    
+
     this.dummy_offer[index].price = offer.price;
     this.dummy_offer[index].discount = offer.discount;
     this.dummy_offer[index].startDate = offer.startDate;
