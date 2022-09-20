@@ -1,8 +1,12 @@
-<div class="offer-row">
-    <p>{{offer?.discount}}% | {{offer?.price}} | {{offer?.startDate?.day + "-" + offer?.startDate?.month + "-" + offer?.startDate?.year}} | {{offer?.endDate?.day + "-" + offer?.endDate?.month + "-" + offer?.endDate?.year}} </p>
-    <button class="btn btn-outline-primary me-2" (click)="open1(content1)">UPDATE</button>
-    <button class="btn btn-outline-primary me-2" (click)="open(content)">DELETE</button>
-</div>
+    <div style="display:flex; justify-content: space-evenly">
+      <div style="margin-right: 8vw;">Rs {{offer.price}}</div>
+      <div style="margin-right: 8vw;">{{offer.discount}}%</div>
+      <div style="margin-right: 8vw;">{{offer.startDate.day + "/" + offer.startDate.month + "/" + offer.startDate.year}}</div>
+      <div style="margin-right: 8vw;">{{offer.endDate.day + "/" + offer.endDate.month + "/" + offer.endDate.year}}</div>
+      <div style="margin-right: 8vw;"><button class="btn btn-outline-primary me-2" (click)="open1(content1)">UPDATE</button></div>
+      <div style="margin-right: 8vw;"><button class="btn btn-outline-danger me-2" (click)="open(content)">DELETE</button></div>
+    </div>
+    
 
 <ng-template #content let-modal>
     <div class="modal-header">
