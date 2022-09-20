@@ -24,24 +24,32 @@
       <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
     </div>
     <div class="modal-body">
-      <form [formGroup] = "addOfferForm">
+      <form>
         <div class="mb-3">
           <label for="price" class="form-label">Price : </label>
-          <input type="number" class="form-control" formControlName="price" />
+          <input type="number" class="form-control" (keyup)="onKeyPrice($event)" min="1" [(ngModel)]="offer.price" name="price" />
           
           <label for="discount" class="form-label">Discount : </label>
-          <input type="number" class="form-control" formControlName="discount" />
+          <input type="number" class="form-control" (keyup)="onKeyDiscount($event)" max="99" min="1" minlength="1" maxlength="2" [(ngModel)]="offer.discount" name="discount"/>
           
           <label for="startDate" class="form-label">Start Date</label>
-          <div class="input-group">
+          <br />
+          <ngb-datepicker #dp [(ngModel)]="offer.startDate" (navigate)="date1 = $event.next" name="startDate"></ngb-datepicker>
+          <br />
+          <!-- <div class="input-group">
             <input id="startDate" class="form-control" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker #dp="ngbDatepicker" formControlName="startDate">
-            <button class="btn btn-outline-secondary calendar" (click)="dp.toggle()" type="button"></button>
+            <button class="btn btn-outline-secondary calendar" (keyup)="onKeyStartDate($event)" (click)="dp.toggle()" type="button"></button>
           </div>
-          <label for="endDate" class="form-label">End Date</label>
+          
           <div class="input-group">
             <input id="endDate" class="form-control" placeholder="yyyy-mm-dd" name="dp1" ngbDatepicker #dp1="ngbDatepicker" formControlName="endDate">
-            <button class="btn btn-outline-secondary calendar" (click)="dp1.toggle()" type="button"></button>
-          </div>
+            <button class="btn btn-outline-secondary calendar" (keyup)="onKeyEndDate($event)" (click)="dp1.toggle()" type="button"></button>
+          </div> -->
+          <label for="endDate" class="form-label">End Date</label>
+          <br />
+          <ngb-datepicker #dp [(ngModel)]="offer.endDate" (navigate)="date2 = $event.next" 
+          [minDate]="offer.startDate" name="endDate"></ngb-datepicker>
+
         </div>
       </form>
     </div>

@@ -1,5 +1,5 @@
 import { Component, OnInit,EventEmitter, Output } from '@angular/core';
-import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
+import {NgbModal, ModalDismissReasons,NgbDateStruct, NgbCalendar} from '@ng-bootstrap/ng-bootstrap';
 import { FormControl,FormGroup ,Validators} from '@angular/forms';
 import { Offer } from 'src/app/Offer';
 
@@ -12,8 +12,13 @@ export class OffersComponent implements OnInit {
 
   closeResult = '';
   
-  constructor(private modalService: NgbModal) {}
+  constructor(private modalService: NgbModal,private calendar: NgbCalendar) {}
 
+  model!: NgbDateStruct;
+  model1!: NgbDateStruct;
+  date1!: { year: number; month: number;};
+  date2!: { year: number; month: number;};
+  public modal_value: Offer = new Offer;
   //public dummy_offer : Array<any> = [
   //   { discount : "10",price : "1000", startDate : "1" ,endDate : "10"},
   //   { discount : "16",price : "1900", startDate : "1" ,endDate : "20"},
@@ -26,11 +31,17 @@ export class OffersComponent implements OnInit {
     this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
       console.log(this.addOfferForm.value)
-      
-      var temp_discount = this.addOfferForm.value.discount;
-      var temp_price = this.addOfferForm.value.price;
-      var temp_startDate = this.addOfferForm.value.startDate;
-      var temp_endDate = this.addOfferForm.value.endDate;
+      console.log("MODAL VALUES : -",this.modal_value);
+
+      var temp_discount = this.modal_value.discount;
+      var temp_price = this.modal_value.price;
+      var temp_startDate = this.model;
+      var temp_endDate = this.model1;
+
+      // var temp_discount = this.addOfferForm.value.discount;
+      // var temp_price = this.addOfferForm.value.price;
+      // var temp_startDate = this.addOfferForm.value.startDate;
+      // var temp_endDate = this.addOfferForm.value.endDate;
 
       // var show_startDate; 
       // var show_endDate;
@@ -40,8 +51,14 @@ export class OffersComponent implements OnInit {
       //   show_startDate = toString(this.addOfferForm.value.startDate.day) + "-" + this.addOfferForm.value.startDate;
       //   show_endDate = toString(this.addOfferForm.value.startDate.day) + "-" + this.addOfferForm.value.startDate;
       // }
-       
+      
+      var curr_price = parseInt(this.modal_value.price);
+      var curr_discount = parseInt(this.modal_value.discount);
+
+      if(curr_price <= 0 || curr_discount <= 0 || curr_discount >= 100) return;
+
       this.dummy_offer.push({discount :temp_discount,price : temp_price,startDate : temp_startDate,endDate : temp_endDate});
+
     }, (reason) => {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
     });
@@ -99,4 +116,9 @@ export class OffersComponent implements OnInit {
     this.dummy_offer[index].endDate = offer.endDate;
 
   }
+
+  public onKeyPrice(event : any) {this.modal_value.price = event.target.value;}
+  public onKeyDiscount(event : any) {this.modal_value.discount = event.target.value;}
+  public onKeyStartDate(event : any) {this.modal_value.startDate = event.target.value;}
+  public onKeyEndDate(event : any) {this.modal_value.endDate = event.target.value;}
 }

@@ -13,11 +13,19 @@ import {Offer} from "src/app/Offer";
 
 export class OfferComponent implements OnInit {
 
-  @Input() offer : Offer | undefined;
+  @Input()
+  offer: Offer = new Offer;
   @Output() offerDelete : EventEmitter<Offer> = new EventEmitter();
   @Output() offerModify : EventEmitter<Offer> = new EventEmitter();
 
   constructor(private modalService: NgbModal) {}
+
+  model : NgbDateStruct = this.offer.startDate;
+  model1: NgbDateStruct = this.offer.endDate;
+  date1!: { year: number; month: number;};
+  date2!: { year: number; month: number;};
+
+  // public modal_value: Offer = new Offer;
 
   ngOnInit(): void {
   }
@@ -48,11 +56,16 @@ export class OfferComponent implements OnInit {
 
     console.log(result);
     
-    let new_offer : Offer = {price : this.addOfferForm.value.price ,discount : this.addOfferForm.value.discount, startDate : this.addOfferForm.value.startDate, endDate : this.addOfferForm.value.endDate};
+    let new_offer : Offer = {price : this.offer.price ,discount : this.offer.discount, startDate : this.offer.startDate, endDate : this.offer.endDate};
     this.offerModify.emit(new_offer);
 
   }, (reason) => {
     console.log(reason);
   })
   };
+
+  public onKeyPrice(event : any) {this.offer.price = event.target.value;}
+  public onKeyDiscount(event : any) {this.offer.discount = event.target.value;}
+  public onKeyStartDate(event : any) {this.offer.startDate = event.target.value;}
+  public onKeyEndDate(event : any) {this.offer.endDate = event.target.value;}
 }
