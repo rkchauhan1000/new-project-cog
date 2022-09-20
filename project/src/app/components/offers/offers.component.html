@@ -4,11 +4,38 @@
 
     <button class="btn btn-lg btn-outline-primary" (click)="open(content)">ADD OFFER</button>
 
-    <app-offer *ngFor="let off of dummy_offer;let indexOfOffer=index;"
-        [offer] = "off"
-        (offerDelete)="deleteOffer($event)"
-        (offerModify)="modifyOffer($event,indexOfOffer)">
-    </app-offer>
+    <p>
+        <button type="button" class="btn btn-outline-primary" (click)="collapse.toggle()" [attr.aria-expanded]="!isCollapsed"
+          aria-controls="collapseExample">
+          Apply Filter
+        </button>
+      </p>
+      <div #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed">
+        <div class="card">
+          <div class="card-body" style="display: flex;justify-content :space-evenly">
+            <label for="filterStartDate">From</label>
+            <ngb-datepicker #dp [(ngModel)]="modelfilterStartDate" (navigate)="filterStartDate = $event.next"></ngb-datepicker>
+            <label for="filterEndDate">To</label>
+            <ngb-datepicker #dp [(ngModel)]="modelfilterEndDate" (navigate)="filterEndDate = $event.next" [minDate]="modelfilterStartDate"></ngb-datepicker>
+          </div>
+        </div>
+      </div>
+
+      <div *ngFor="let off of dummy_offer;let indexOfOffer=index;">
+        <app-offer  
+      *ngIf="(
+        (off.endDate.year > modelfilterStartDate.year && off.endDate.year < modelfilterEndDate.year) ||
+        (off.endDate.year == modelfilterStartDate.year  && off.endDate.year == modelfilterEndDate.year && off.endDate.month > modelfilterStartDate.month && off.endDate.month < modelfilterEndDate.month) ||
+        (off.endDate.year == modelfilterStartDate.year  && off.endDate.year == modelfilterEndDate.year && off.endDate.month == modelfilterStartDate.month && off.endDate.month == modelfilterEndDate.month && off.endDate.day >= modelfilterStartDate.day && off.endDate.day <= modelfilterEndDate.day) ||
+        (off.endDate.year == modelfilterStartDate.year  && off.endDate.year < modelfilterEndDate.year && off.endDate.month > modelfilterStartDate.month) ||
+        (off.endDate.year == modelfilterStartDate.year  && off.endDate.year < modelfilterEndDate.year && off.endDate.month == modelfilterStartDate.month && off.endDate.day >= modelfilterStartDate.day) ||
+        (off.endDate.year > modelfilterStartDate.year  && off.endDate.year == modelfilterEndDate.year && off.endDate.month < modelfilterEndDate.month) ||
+        (off.endDate.year > modelfilterStartDate.year  && off.endDate.year == modelfilterEndDate.year && off.endDate.month == modelfilterEndDate.month && off.endDate.day <= modelfilterEndDate.day)
+      )"
+      [offer] = "off" (offerDelete)="deleteOffer($event)" (offerModify)="modifyOffer($event,indexOfOffer)"></app-offer>
+      </div>
+
+      
 </div>
 
 

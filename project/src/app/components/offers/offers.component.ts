@@ -11,13 +11,19 @@ import { Offer } from 'src/app/Offer';
 export class OffersComponent implements OnInit {
 
   closeResult = '';
-  
+  public isCollapsed = true;
   constructor(private modalService: NgbModal,private calendar: NgbCalendar) {}
 
   model!: NgbDateStruct;
   model1!: NgbDateStruct;
   date1!: { year: number; month: number;};
   date2!: { year: number; month: number;};
+
+  modelfilterStartDate: NgbDateStruct = { year: 1999, month: 7, day: 14 };
+  modelfilterEndDate: NgbDateStruct = { year: 2100, month: 7, day: 14 };
+  filterStartDate: { year: number; month: number;} = { year: 1999, month: 7};
+  filterEndDate: { year: number; month: number;} = { year: 2100, month: 7} ;
+
   public modal_value: Offer = new Offer;
   //public dummy_offer : Array<any> = [
   //   { discount : "10",price : "1000", startDate : "1" ,endDate : "10"},

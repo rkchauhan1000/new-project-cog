@@ -48,7 +48,7 @@
           <label for="endDate" class="form-label">End Date</label>
           <br />
           <ngb-datepicker #dp [(ngModel)]="offer.endDate" (navigate)="date2 = $event.next" 
-          [minDate]="offer.startDate" name="endDate"></ngb-datepicker>
+          [minDate]="model" name="endDate"></ngb-datepicker>
 
         </div>
       </form>

@@ -15,6 +15,7 @@ export class OfferComponent implements OnInit {
 
   @Input()
   offer: Offer = new Offer;
+  temp_offer : Offer = this.offer;
   @Output() offerDelete : EventEmitter<Offer> = new EventEmitter();
   @Output() offerModify : EventEmitter<Offer> = new EventEmitter();
 
@@ -64,8 +65,8 @@ export class OfferComponent implements OnInit {
   })
   };
 
-  public onKeyPrice(event : any) {this.offer.price = event.target.value;}
-  public onKeyDiscount(event : any) {this.offer.discount = event.target.value;}
-  public onKeyStartDate(event : any) {this.offer.startDate = event.target.value;}
-  public onKeyEndDate(event : any) {this.offer.endDate = event.target.value;}
+  public onKeyPrice(event : any) {this.temp_offer.price = event.target.value;}
+  public onKeyDiscount(event : any) {this.temp_offer.discount = event.target.value;}
+  public onKeyStartDate(event : any) {this.temp_offer.startDate = event.target.value;}
+  public onKeyEndDate(event : any) {this.temp_offer.endDate = event.target.value;}
 }
