@@ -1,9 +1,22 @@
-<div>
+<div class="offersPage">
 
     <h2>OFFERS PAGE</h2>
 
-    <button class="btn btn-lg btn-outline-primary" (click)="open(content)">ADD OFFER</button>
-    <button class="btn btn-lg btn-outline-primary" (click)="logout()">Logout</button>
+    <div class="buttons">
+        <div>
+            <button class="btn btn-lg btn-outline-primary" (click)="open(content)">ADD OFFER</button>
+        </div>
+        <div class="col">
+            <div ngbDropdown class="d-inline-block">
+              <button type="button" class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>Options</button>
+              <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                <button ngbDropdownItem disabled>User - {{user}}</button>
+                <button ngbDropdownItem (click)="logout()">Logout</button>
+              </div>
+            </div>
+          </div>
+    </div>
+    
     <p>
         <button type="button" class="btn btn-outline-primary" (click)="collapse.toggle()" [attr.aria-expanded]="!isCollapsed"
           aria-controls="collapseExample">
@@ -21,6 +34,9 @@
         </div>
       </div>
 
+      <div *ngIf="(dummy_offer.length == 0)">
+        <h3>No offers present in database</h3>
+      </div>
       <div *ngFor="let off of dummy_offer;let indexOfOffer=index;">
         <app-offer  
       *ngIf="(

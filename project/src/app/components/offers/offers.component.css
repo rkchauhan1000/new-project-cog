@@ -1,0 +1,11 @@
+.offersPage{
+    padding: 15px;
+    /* display: block; */
+    /* justify-content: center; */
+    text-align: center;
+}
+
+.buttons{
+    padding: 10px;
+    justify-content: space-between !important;
+}

@@ -12,10 +12,11 @@ export class OffersComponent implements OnInit {
 
   closeResult = '';
   public isCollapsed = true;
+  public user: any;
   constructor(private modalService: NgbModal,private calendar: NgbCalendar,private router : Router) {
-    var user = localStorage.getItem('user');
+    this.user = localStorage.getItem('user');
 
-    if(!user) router.navigate(['/login']);
+    if(!this.user) router.navigate(['/login']);
   }
 
   model!: NgbDateStruct;
