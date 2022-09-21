@@ -38,7 +38,7 @@
         <h3>No offers present in database</h3>
       </div>
       <div *ngIf="(dummy_offer.length > 0)" style="display:flex;margin-left: 12vw;margin-top: 8vh;">
-        <div style="margin-right: 8vw;"><b>Price</b></div>
+        <div style="margin-right: 8vw;"><b>Minimum Price</b></div>
         <div style="margin-right: 8vw;"><b>Discount</b></div>
         <div style="margin-right: 8vw;"><b>Start Date</b></div>
         <div style="margin-right: 8vw;"><b>End Date</b></div>
@@ -49,6 +49,7 @@
           (off.endDate.year > modelfilterStartDate.year && off.endDate.year < modelfilterEndDate.year) ||
           (off.endDate.year == modelfilterStartDate.year  && off.endDate.year == modelfilterEndDate.year && off.endDate.month > modelfilterStartDate.month && off.endDate.month < modelfilterEndDate.month) ||
           (off.endDate.year == modelfilterStartDate.year  && off.endDate.year == modelfilterEndDate.year && off.endDate.month == modelfilterStartDate.month && off.endDate.month == modelfilterEndDate.month && off.endDate.day >= modelfilterStartDate.day && off.endDate.day <= modelfilterEndDate.day) ||
+          (off.endDate.year == modelfilterStartDate.year  && off.endDate.year == modelfilterEndDate.year && off.endDate.month > modelfilterStartDate.month && off.endDate.month == modelfilterEndDate.month && off.endDate.day <= modelfilterEndDate.day) ||
           (off.endDate.year == modelfilterStartDate.year  && off.endDate.year < modelfilterEndDate.year && off.endDate.month > modelfilterStartDate.month) ||
           (off.endDate.year == modelfilterStartDate.year  && off.endDate.year < modelfilterEndDate.year && off.endDate.month == modelfilterStartDate.month && off.endDate.day >= modelfilterStartDate.day) ||
           (off.endDate.year > modelfilterStartDate.year  && off.endDate.year == modelfilterEndDate.year && off.endDate.month < modelfilterEndDate.month) ||
