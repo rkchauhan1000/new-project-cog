@@ -3,6 +3,7 @@ import {NgbModal, ModalDismissReasons,NgbDateStruct, NgbCalendar} from '@ng-boot
 import { FormControl,FormGroup ,Validators} from '@angular/forms';
 import { Offer } from 'src/app/Offer';
 import { Router } from '@angular/router';
+import {AppServiceService} from "../../app-service.service"
 @Component({
   selector: 'app-offers',
   templateUrl: './offers.component.html',
@@ -13,9 +14,9 @@ export class OffersComponent implements OnInit {
   closeResult = '';
   public isCollapsed = true;
   public user: any;
-  constructor(private modalService: NgbModal,private calendar: NgbCalendar,private router : Router) {
+  constructor(private modalService: NgbModal,private calendar: NgbCalendar,private router : Router,private service : AppServiceService) {
     this.user = localStorage.getItem('user');
-
+    this.getDataFromAPI();
     if(!this.user) router.navigate(['/login']);
   }
 
@@ -38,6 +39,27 @@ export class OffersComponent implements OnInit {
   //   { discount : "15",price : "10500", startDate : "9" ,endDate : "20"}
   // ]; 
   public dummy_offer : Array<Offer> = [];
+
+
+  getDataFromAPI(){
+    this.service.getData().subscribe((res) => {
+      console.log("Response :",res);
+      
+      // console.log()
+      // for(let val of res)
+      // {
+      //   this.dummy_offer.push({val.price,val.discount,val.startDate,val.endDate});
+      // }
+
+      // this.dummy_offer.concat(res);
+    })
+  }
+
+  updateDataFromAPI(){
+    this.service.updateData(this.dummy_offer).subscribe((res) => {
+      console.log("Response :",res);
+    })
+  }
 
   logout(){
     localStorage.removeItem('user');
@@ -73,7 +95,8 @@ export class OffersComponent implements OnInit {
       var curr_discount = parseInt(this.modal_value.discount);
 
       if(curr_price <= 0 || curr_discount <= 0 || curr_discount >= 100) return;
-
+      this.updateDataFromAPI();
+      console.log(this.dummy_offer)
       this.dummy_offer.push({discount :temp_discount,price : temp_price,startDate : temp_startDate,endDate : temp_endDate});
       window.alert("Offer added successfully !!")
     }, (reason) => {
@@ -123,6 +146,7 @@ export class OffersComponent implements OnInit {
   public deleteOffer(offer : Offer) {
     const index = this.dummy_offer.indexOf(offer);
     this.dummy_offer.splice(index,1);
+    this.updateDataFromAPI();
     window.alert("Offer deleted successfully !!")
   }
 
@@ -150,6 +174,7 @@ export class OffersComponent implements OnInit {
     this.dummy_offer[index].startDate = offer.startDate;
     this.dummy_offer[index].endDate = offer.endDate;
 
+    this.updateDataFromAPI();
     window.alert("Offer updated successfully !!")
   }
 
