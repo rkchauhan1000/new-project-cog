@@ -4,6 +4,7 @@ import { FormControl,FormGroup ,Validators} from '@angular/forms';
 import { Offer } from 'src/app/Offer';
 import { Router } from '@angular/router';
 import {AppServiceService} from "../../app-service.service"
+
 @Component({
   selector: 'app-offers',
   templateUrl: './offers.component.html',
@@ -42,9 +43,12 @@ export class OffersComponent implements OnInit {
 
 
   getDataFromAPI(){
-    this.service.getData().subscribe((res) => {
+    const allOffers = this.service.getData();
+    allOffers.subscribe((res) => {
+      
       console.log("Response :",res);
       
+      // this.dummy_offer.push({res[0].price,});
       // console.log()
       // for(let val of res)
       // {
@@ -95,9 +99,12 @@ export class OffersComponent implements OnInit {
       var curr_discount = parseInt(this.modal_value.discount);
 
       if(curr_price <= 0 || curr_discount <= 0 || curr_discount >= 100) return;
-      this.updateDataFromAPI();
+      
       console.log(this.dummy_offer)
+      
       this.dummy_offer.push({discount :temp_discount,price : temp_price,startDate : temp_startDate,endDate : temp_endDate});
+
+      this.updateDataFromAPI();
       window.alert("Offer added successfully !!")
     }, (reason) => {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;

@@ -19,25 +19,36 @@ app.get('/getOffers', async (req,res) => {
 
     let data = await dbConnect();
     data = await data.find().toArray();
-    console.log(data);
+    // console.log("------------------------------------------------------------------------------------>")
+    // console.log(data);
 
-    return res.json({value : data})
+    // let res_data = [];
+
+    // for(let i=0;i<data.length;i++)
+    // {
+    //     res_data.push({data[i].price, data[i].discount, data[i].startDate, data[i].endDate});
+    // }
+    // console.log(typeof(data))
+    // localStorage.setItem('data',data)
+    return res.send(data)
 }); 
 
 app.post('/updateOffers', async (req,res) => {
 
     let data = await dbConnect();
 
-    data = await data.deleteMany({});
+    let temp_res = await data.deleteMany({});
 
-    console.log("Response ------------------------> ",req.body);
+    // console.log(temp_res);
+
+    // console.log("Response ------------------------> ",req.body);
     // let result = await data.insert(req.body);
 
-    for(let i = 0 ; i < req.body.length ; i++)
-    {
-        let result = await data.insertOne(req.body[i]);
-    }
-
+    // for(let i = 0 ; i < req.body.length ; i++)
+    // {
+        
+    // }
+    let result = await data.insertMany(req.body);
     res.send({
         message : 'Successfully updated data !!'
     })
