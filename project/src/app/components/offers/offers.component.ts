@@ -17,8 +17,9 @@ export class OffersComponent implements OnInit {
   public user: any;
   constructor(private modalService: NgbModal,private calendar: NgbCalendar,private router : Router,private service : AppServiceService) {
     this.user = localStorage.getItem('user');
-    this.getDataFromAPI();
     if(!this.user) router.navigate(['/login']);
+    console.log("Entered Constructor")
+    this.getDataFromAPI();
   }
 
   model!: NgbDateStruct;
@@ -43,26 +44,31 @@ export class OffersComponent implements OnInit {
 
 
   getDataFromAPI(){
-    const allOffers = this.service.getData();
-    allOffers.subscribe((res) => {
-      
-      console.log("Response :",res);
-      
-      // this.dummy_offer.push({res[0].price,});
-      // console.log()
-      // for(let val of res)
-      // {
-      //   this.dummy_offer.push({val.price,val.discount,val.startDate,val.endDate});
-      // }
+    const allOffers = this.service.getData().subscribe();
+    let offerStorage = localStorage.getItem("offers");
 
-      // this.dummy_offer.concat(res);
-    })
+    if(!offerStorage)
+    { 
+      // new_offers : Array<Offer> = [];
+      localStorage.setItem("offers",JSON.stringify(this.dummy_offer));
+    }
+    else
+    {  
+      console.log(offerStorage);
+  
+      // for(let i = 0; i < offerStorage.length;i++)
+      // {
+      //   this.dummy_offer.push(offerStorage[i]);
+      // }
+      this.dummy_offer = JSON.parse(offerStorage);
+    }
   }
 
   updateDataFromAPI(){
     this.service.updateData(this.dummy_offer).subscribe((res) => {
       console.log("Response :",res);
     })
+
   }
 
   logout(){
@@ -103,6 +109,8 @@ export class OffersComponent implements OnInit {
       console.log(this.dummy_offer)
       
       this.dummy_offer.push({discount :temp_discount,price : temp_price,startDate : temp_startDate,endDate : temp_endDate});
+
+      localStorage.setItem("offers",JSON.stringify(this.dummy_offer));
 
       this.updateDataFromAPI();
       window.alert("Offer added successfully !!")
@@ -153,6 +161,7 @@ export class OffersComponent implements OnInit {
   public deleteOffer(offer : Offer) {
     const index = this.dummy_offer.indexOf(offer);
     this.dummy_offer.splice(index,1);
+    localStorage.setItem("offers",JSON.stringify(this.dummy_offer));
     this.updateDataFromAPI();
     window.alert("Offer deleted successfully !!")
   }
@@ -181,6 +190,7 @@ export class OffersComponent implements OnInit {
     this.dummy_offer[index].startDate = offer.startDate;
     this.dummy_offer[index].endDate = offer.endDate;
 
+    localStorage.setItem("offers",JSON.stringify(this.dummy_offer));
     this.updateDataFromAPI();
     window.alert("Offer updated successfully !!")
   }
