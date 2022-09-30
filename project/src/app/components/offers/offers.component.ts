@@ -4,6 +4,7 @@ import { FormControl,FormGroup ,Validators} from '@angular/forms';
 import { Offer } from 'src/app/Offer';
 import { Router } from '@angular/router';
 import {AppServiceService} from "../../app-service.service"
+import { getLocaleDateFormat } from '@angular/common';
 
 @Component({
   selector: 'app-offers',
@@ -15,10 +16,10 @@ export class OffersComponent implements OnInit {
   closeResult = '';
   public isCollapsed = true;
   public user: any;
+
   constructor(private modalService: NgbModal,private calendar: NgbCalendar,private router : Router,private service : AppServiceService) {
     this.user = localStorage.getItem('user');
     if(!this.user) router.navigate(['/login']);
-    console.log("Entered Constructor")
     this.getDataFromAPI();
   }
 
@@ -31,35 +32,61 @@ export class OffersComponent implements OnInit {
   modelfilterEndDate: NgbDateStruct = { year: 2100, month: 7, day: 14 };
   filterStartDate: { year: number; month: number;} = { year: 1999, month: 7};
   filterEndDate: { year: number; month: number;} = { year: 2100, month: 7} ;
+  option1Checked = true;
+  option2Checked = true;
 
   public modal_value: Offer = new Offer;
-  //public dummy_offer : Array<any> = [
-  //   { discount : "10",price : "1000", startDate : "1" ,endDate : "10"},
-  //   { discount : "16",price : "1900", startDate : "1" ,endDate : "20"},
-  //   { discount : "17",price : "12000", startDate : "1" ,endDate : "30"},
-  //   { discount : "12",price : "10900", startDate : "5" ,endDate : "10"},
-  //   { discount : "15",price : "10500", startDate : "9" ,endDate : "20"}
-  // ]; 
+  
   public dummy_offer : Array<Offer> = [];
 
+  clearFilter(){
+    this.modelfilterStartDate= { year: 1999, month: 7, day: 14 };
+    this.modelfilterEndDate = { year: 2100, month: 7, day: 14 };
+    this.option1Checked = true;
+    this.option2Checked = true;
+  }
 
+  public checkClick(Event : any){
+    console.log(Event.target.value);
+
+    if(Event.target.value == 'option1')
+    {
+      this.option1Checked = !this.option1Checked;
+    }
+    else if(Event.target.value == 'option2')
+    {
+      this.option2Checked = !this.option2Checked;
+    }
+  }
+  public isActive(OfferStartDate: NgbDateStruct,OfferEndDate : NgbDateStruct) : Boolean{
+    var d = new Date();
+    
+    var day = d.getDate();
+    var month = d.getMonth() + 1;
+    var year = d.getFullYear();
+
+    if((OfferStartDate.year > year) || ((OfferStartDate.year == year) && (OfferStartDate.month > month)) || ((OfferStartDate.year == year) && (OfferStartDate.month == month) && (OfferStartDate.day > day)))
+    {
+      return false;
+    } 
+    if((OfferEndDate.year < year) || ((OfferEndDate.year == year) && (OfferEndDate.month < month)) || ((OfferEndDate.year == year) && (OfferEndDate.month == month) && (OfferEndDate.day < day)))
+    {
+      return false;
+    } 
+   
+    return true;
+  }
   getDataFromAPI(){
     const allOffers = this.service.getData().subscribe();
     let offerStorage = localStorage.getItem("offers");
 
     if(!offerStorage)
     { 
-      // new_offers : Array<Offer> = [];
       localStorage.setItem("offers",JSON.stringify(this.dummy_offer));
     }
     else
     {  
       console.log(offerStorage);
-  
-      // for(let i = 0; i < offerStorage.length;i++)
-      // {
-      //   this.dummy_offer.push(offerStorage[i]);
-      // }
       this.dummy_offer = JSON.parse(offerStorage);
     }
   }
@@ -68,7 +95,6 @@ export class OffersComponent implements OnInit {
     this.service.updateData(this.dummy_offer).subscribe((res) => {
       console.log("Response :",res);
     })
-
   }
 
   logout(){
@@ -76,39 +102,21 @@ export class OffersComponent implements OnInit {
     window.alert("Successfully logged out !!")
     this.router.navigate(['/login']);
   }
+
   open(content : any) {
     this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
-      this.closeResult = `Closed with: ${result}`;
-      console.log(this.addOfferForm.value)
-      console.log("MODAL VALUES : -",this.modal_value);
-
-      var temp_discount = this.modal_value.discount;
-      var temp_price = this.modal_value.price;
-      var temp_startDate = this.model;
-      var temp_endDate = this.model1;
-
-      // var temp_discount = this.addOfferForm.value.discount;
-      // var temp_price = this.addOfferForm.value.price;
-      // var temp_startDate = this.addOfferForm.value.startDate;
-      // var temp_endDate = this.addOfferForm.value.endDate;
-
-      // var show_startDate; 
-      // var show_endDate;
-
-      // if(this.addOfferForm.value.startDate !== null)
-      // {
-      //   show_startDate = toString(this.addOfferForm.value.startDate.day) + "-" + this.addOfferForm.value.startDate;
-      //   show_endDate = toString(this.addOfferForm.value.startDate.day) + "-" + this.addOfferForm.value.startDate;
-      // }
-      
-      var curr_price = parseInt(this.modal_value.price);
-      var curr_discount = parseInt(this.modal_value.discount);
-
-      if(curr_price <= 0 || curr_discount <= 0 || curr_discount >= 100) return;
-      
-      console.log(this.dummy_offer)
-      
-      this.dummy_offer.push({discount :temp_discount,price : temp_price,startDate : temp_startDate,endDate : temp_endDate});
+    
+      if(this.modal_value.discount <= 0 || this.modal_value.discount >= 100)
+      {
+        window.alert('Discount should be in the range 1 to 99 !!');
+        return;
+      }
+      if(this.modal_value.price <= 0)
+      {
+        window.alert('Price should be greater than 0 !!');
+        return;
+      }
+      this.dummy_offer.push({discount :this.modal_value.discount,price : this.modal_value.price,startDate : this.modal_value.startDate,endDate : this.modal_value.endDate});
 
       localStorage.setItem("offers",JSON.stringify(this.dummy_offer));
 
@@ -117,29 +125,6 @@ export class OffersComponent implements OnInit {
     }, (reason) => {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
     });
-  }
-
-  addOfferForm = new FormGroup({
-    price : new FormControl("",[Validators.required]),
-    discount : new FormControl("",[Validators.required, Validators.min(1) , Validators.max(100)]),
-    startDate: new FormControl("",[Validators.required]),
-    endDate: new FormControl("",[Validators.required])
-  });
-
-  get Price() : FormControl {
-    return this.addOfferForm.get('price') as FormControl;
-  }
-
-  get Discount() : FormControl {
-    return this.addOfferForm.get('discount') as FormControl;
-  }
-
-  get StartDate() : FormControl {
-    return this.addOfferForm.get('startDate') as FormControl;
-  }
-
-  get EndDate() : FormControl {
-    return this.addOfferForm.get('endDate') as FormControl;
   }
 
   private getDismissReason(reason: any): string {
@@ -151,15 +136,11 @@ export class OffersComponent implements OnInit {
       return `with: ${reason}`;
     }
   }
+
   ngOnInit(): void {
   }
 
-  public saveOffer() {
-    console.log(this.addOfferForm)
-  }
-
-  public deleteOffer(offer : Offer) {
-    const index = this.dummy_offer.indexOf(offer);
+  public deleteOffer(index : any) {
     this.dummy_offer.splice(index,1);
     localStorage.setItem("offers",JSON.stringify(this.dummy_offer));
     this.updateDataFromAPI();
@@ -197,6 +178,32 @@ export class OffersComponent implements OnInit {
 
   public onKeyPrice(event : any) {this.modal_value.price = event.target.value;}
   public onKeyDiscount(event : any) {this.modal_value.discount = event.target.value;}
-  public onKeyStartDate(event : any) {this.modal_value.startDate = event.target.value;}
-  public onKeyEndDate(event : any) {this.modal_value.endDate = event.target.value;}
+
+  open102(name : any,index : any) { this.modalService.open(name).result.then((result) => { 
+    console.log(result);
+    this.deleteOffer(index);
+  }, (reason) => {
+    console.log(reason);
+  })
+  };
+
+  curr_update_modal: Offer = new Offer;
+
+  open101(name : any,index : any,offerUpdate : Offer){
+
+    this.curr_update_modal.price = offerUpdate.price;
+    this.curr_update_modal.discount = offerUpdate.discount;
+    this.curr_update_modal.startDate = offerUpdate.startDate;
+    this.curr_update_modal.endDate = offerUpdate.endDate;
+
+    this.modalService.open(name).result.then((result) => { 
+      console.log(result);
+      this.modifyOffer(this.curr_update_modal,index);
+    }, (reason) => {
+      console.log(reason);
+    })
+  }
+
+  public onKeyPriceUpdate(event : any) {this.curr_update_modal.price = event.target.value;}
+  public onKeyDiscountUpdate(event : any) {this.curr_update_modal.discount = event.target.value;}
 }

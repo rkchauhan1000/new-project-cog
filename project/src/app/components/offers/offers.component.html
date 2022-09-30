@@ -22,14 +22,27 @@
           aria-controls="collapseExample">
           Apply Filter
         </button>
+        <button type="button" class="btn btn-outline-primary" (click)="clearFilter()" style="margin-left : 25px">Clear Filter</button>
       </p>
       <div #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed">
         <div class="card">
-          <div class="card-body" style="display: flex;justify-content :space-evenly">
-            <label for="filterStartDate">From</label>
-            <ngb-datepicker #dp [(ngModel)]="modelfilterStartDate" (navigate)="filterStartDate = $event.next"></ngb-datepicker>
-            <label for="filterEndDate">To</label>
-            <ngb-datepicker #dp [(ngModel)]="modelfilterEndDate" (navigate)="filterEndDate = $event.next" [minDate]="modelfilterStartDate"></ngb-datepicker>
+          <div class="card-body" style="display: flex;">
+            <div style="margin-right: 4vw;margin-left: 10vw;">
+              <label for="filterStartDate" style="margin-right: 15px;">From</label>
+              <ngb-datepicker #dp [(ngModel)]="modelfilterStartDate" (navigate)="filterStartDate = $event.next"></ngb-datepicker>
+            </div>
+            <div style="margin-right: 4vw;margin-left: 5vw">
+              <label for="filterEndDate" style="margin-right: 15px;">To</label>
+              <ngb-datepicker #dp [(ngModel)]="modelfilterEndDate" (navigate)="filterEndDate = $event.next" [minDate]="modelfilterStartDate"></ngb-datepicker>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1" (click)="checkClick($event)" [checked]="option1Checked">
+              <label class="form-check-label" for="inlineCheckbox1">Active</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2" (click)="checkClick($event)" [checked]="option2Checked">
+              <label class="form-check-label" for="inlineCheckbox2">Inactive</label>
+            </div>
           </div>
         </div>
       </div>
@@ -37,29 +50,125 @@
       <div class="nodata" *ngIf="(dummy_offer.length == 0)">
         <h3>No offers present in database</h3>
       </div>
-      <div *ngIf="(dummy_offer.length > 0)" style="display:flex;margin-left: 12vw;margin-top: 8vh;">
-        <div style="margin-right: 8vw;"><b>Minimum Price</b></div>
-        <div style="margin-right: 8vw;"><b>Discount</b></div>
-        <div style="margin-right: 8vw;"><b>Start Date</b></div>
-        <div style="margin-right: 8vw;"><b>End Date</b></div>
-      </div>
-      <div class="offers" *ngFor="let off of dummy_offer;let indexOfOffer=index;" style="justify-content: space-evenly;">
-        <app-offer  
-        *ngIf="(
-          (off.endDate.year > modelfilterStartDate.year && off.endDate.year < modelfilterEndDate.year) ||
-          (off.endDate.year == modelfilterStartDate.year  && off.endDate.year == modelfilterEndDate.year && off.endDate.month > modelfilterStartDate.month && off.endDate.month < modelfilterEndDate.month) ||
-          (off.endDate.year == modelfilterStartDate.year  && off.endDate.year == modelfilterEndDate.year && off.endDate.month == modelfilterStartDate.month && off.endDate.month == modelfilterEndDate.month && off.endDate.day >= modelfilterStartDate.day && off.endDate.day <= modelfilterEndDate.day) ||
-          (off.endDate.year == modelfilterStartDate.year  && off.endDate.year == modelfilterEndDate.year && off.endDate.month > modelfilterStartDate.month && off.endDate.month == modelfilterEndDate.month && off.endDate.day <= modelfilterEndDate.day) ||
-          (off.endDate.year == modelfilterStartDate.year  && off.endDate.year < modelfilterEndDate.year && off.endDate.month > modelfilterStartDate.month) ||
-          (off.endDate.year == modelfilterStartDate.year  && off.endDate.year < modelfilterEndDate.year && off.endDate.month == modelfilterStartDate.month && off.endDate.day >= modelfilterStartDate.day) ||
-          (off.endDate.year > modelfilterStartDate.year  && off.endDate.year == modelfilterEndDate.year && off.endDate.month < modelfilterEndDate.month) ||
-          (off.endDate.year > modelfilterStartDate.year  && off.endDate.year == modelfilterEndDate.year && off.endDate.month == modelfilterEndDate.month && off.endDate.day <= modelfilterEndDate.day)
-        )"
-        [offer] = "off" (offerDelete)="deleteOffer($event)" (offerModify)="modifyOffer($event,indexOfOffer)"></app-offer>
-    </div>
-        
 
-      
+      <div *ngIf="(dummy_offer.length > 0)">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Minimum Price</th>
+              <th scope="col">Discount</th>
+              <th scope="col">Start Date</th>
+              <th scope="col">End Date</th>
+              <th scope="col">Status</th>
+              <th scope="col"></th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let off of dummy_offer;let indexOfOffer=index">
+              <td *ngIf="(
+                ((off.endDate.year > modelfilterStartDate.year && off.endDate.year < modelfilterEndDate.year) ||
+                (off.endDate.year == modelfilterStartDate.year  && off.endDate.year == modelfilterEndDate.year && off.endDate.month > modelfilterStartDate.month && off.endDate.month < modelfilterEndDate.month) ||
+                (off.endDate.year == modelfilterStartDate.year  && off.endDate.year == modelfilterEndDate.year && off.endDate.month == modelfilterStartDate.month && off.endDate.month == modelfilterEndDate.month && off.endDate.day >= modelfilterStartDate.day && off.endDate.day <= modelfilterEndDate.day) ||
+                (off.endDate.year == modelfilterStartDate.year  && off.endDate.year == modelfilterEndDate.year && off.endDate.month > modelfilterStartDate.month && off.endDate.month == modelfilterEndDate.month && off.endDate.day <= modelfilterEndDate.day) ||
+                (off.endDate.year == modelfilterStartDate.year  && off.endDate.year < modelfilterEndDate.year && off.endDate.month > modelfilterStartDate.month) ||
+                (off.endDate.year == modelfilterStartDate.year  && off.endDate.year < modelfilterEndDate.year && off.endDate.month == modelfilterStartDate.month && off.endDate.day >= modelfilterStartDate.day) ||
+                (off.endDate.year > modelfilterStartDate.year  && off.endDate.year == modelfilterEndDate.year && off.endDate.month < modelfilterEndDate.month) ||
+                (off.endDate.year > modelfilterStartDate.year  && off.endDate.year == modelfilterEndDate.year && off.endDate.month == modelfilterEndDate.month && off.endDate.day <= modelfilterEndDate.day)) &&
+                ((option1Checked && isActive(off.startDate,off.endDate)) ||
+                (option2Checked && !isActive(off.startDate,off.endDate)))
+              )">
+              Rs {{off.price}}
+              </td>
+              <td *ngIf="(
+                ((off.endDate.year > modelfilterStartDate.year && off.endDate.year < modelfilterEndDate.year) ||
+                (off.endDate.year == modelfilterStartDate.year  && off.endDate.year == modelfilterEndDate.year && off.endDate.month > modelfilterStartDate.month && off.endDate.month < modelfilterEndDate.month) ||
+                (off.endDate.year == modelfilterStartDate.year  && off.endDate.year == modelfilterEndDate.year && off.endDate.month == modelfilterStartDate.month && off.endDate.month == modelfilterEndDate.month && off.endDate.day >= modelfilterStartDate.day && off.endDate.day <= modelfilterEndDate.day) ||
+                (off.endDate.year == modelfilterStartDate.year  && off.endDate.year == modelfilterEndDate.year && off.endDate.month > modelfilterStartDate.month && off.endDate.month == modelfilterEndDate.month && off.endDate.day <= modelfilterEndDate.day) ||
+                (off.endDate.year == modelfilterStartDate.year  && off.endDate.year < modelfilterEndDate.year && off.endDate.month > modelfilterStartDate.month) ||
+                (off.endDate.year == modelfilterStartDate.year  && off.endDate.year < modelfilterEndDate.year && off.endDate.month == modelfilterStartDate.month && off.endDate.day >= modelfilterStartDate.day) ||
+                (off.endDate.year > modelfilterStartDate.year  && off.endDate.year == modelfilterEndDate.year && off.endDate.month < modelfilterEndDate.month) ||
+                (off.endDate.year > modelfilterStartDate.year  && off.endDate.year == modelfilterEndDate.year && off.endDate.month == modelfilterEndDate.month && off.endDate.day <= modelfilterEndDate.day)) &&
+                ((option1Checked && isActive(off.startDate,off.endDate)) ||
+                (option2Checked && !isActive(off.startDate,off.endDate)))
+              )">
+              {{off.discount}}%
+              </td>
+              <td *ngIf="(
+                ((off.endDate.year > modelfilterStartDate.year && off.endDate.year < modelfilterEndDate.year) ||
+                (off.endDate.year == modelfilterStartDate.year  && off.endDate.year == modelfilterEndDate.year && off.endDate.month > modelfilterStartDate.month && off.endDate.month < modelfilterEndDate.month) ||
+                (off.endDate.year == modelfilterStartDate.year  && off.endDate.year == modelfilterEndDate.year && off.endDate.month == modelfilterStartDate.month && off.endDate.month == modelfilterEndDate.month && off.endDate.day >= modelfilterStartDate.day && off.endDate.day <= modelfilterEndDate.day) ||
+                (off.endDate.year == modelfilterStartDate.year  && off.endDate.year == modelfilterEndDate.year && off.endDate.month > modelfilterStartDate.month && off.endDate.month == modelfilterEndDate.month && off.endDate.day <= modelfilterEndDate.day) ||
+                (off.endDate.year == modelfilterStartDate.year  && off.endDate.year < modelfilterEndDate.year && off.endDate.month > modelfilterStartDate.month) ||
+                (off.endDate.year == modelfilterStartDate.year  && off.endDate.year < modelfilterEndDate.year && off.endDate.month == modelfilterStartDate.month && off.endDate.day >= modelfilterStartDate.day) ||
+                (off.endDate.year > modelfilterStartDate.year  && off.endDate.year == modelfilterEndDate.year && off.endDate.month < modelfilterEndDate.month) ||
+                (off.endDate.year > modelfilterStartDate.year  && off.endDate.year == modelfilterEndDate.year && off.endDate.month == modelfilterEndDate.month && off.endDate.day <= modelfilterEndDate.day)) &&
+                ((option1Checked && isActive(off.startDate,off.endDate)) ||
+                (option2Checked && !isActive(off.startDate,off.endDate)))
+              )">
+              {{off.startDate.day + "/" + off.startDate.month + "/" + off.startDate.year}}
+              </td>
+              <td *ngIf="(
+                ((off.endDate.year > modelfilterStartDate.year && off.endDate.year < modelfilterEndDate.year) ||
+                (off.endDate.year == modelfilterStartDate.year  && off.endDate.year == modelfilterEndDate.year && off.endDate.month > modelfilterStartDate.month && off.endDate.month < modelfilterEndDate.month) ||
+                (off.endDate.year == modelfilterStartDate.year  && off.endDate.year == modelfilterEndDate.year && off.endDate.month == modelfilterStartDate.month && off.endDate.month == modelfilterEndDate.month && off.endDate.day >= modelfilterStartDate.day && off.endDate.day <= modelfilterEndDate.day) ||
+                (off.endDate.year == modelfilterStartDate.year  && off.endDate.year == modelfilterEndDate.year && off.endDate.month > modelfilterStartDate.month && off.endDate.month == modelfilterEndDate.month && off.endDate.day <= modelfilterEndDate.day) ||
+                (off.endDate.year == modelfilterStartDate.year  && off.endDate.year < modelfilterEndDate.year && off.endDate.month > modelfilterStartDate.month) ||
+                (off.endDate.year == modelfilterStartDate.year  && off.endDate.year < modelfilterEndDate.year && off.endDate.month == modelfilterStartDate.month && off.endDate.day >= modelfilterStartDate.day) ||
+                (off.endDate.year > modelfilterStartDate.year  && off.endDate.year == modelfilterEndDate.year && off.endDate.month < modelfilterEndDate.month) ||
+                (off.endDate.year > modelfilterStartDate.year  && off.endDate.year == modelfilterEndDate.year && off.endDate.month == modelfilterEndDate.month && off.endDate.day <= modelfilterEndDate.day)) &&
+                ((option1Checked && isActive(off.startDate,off.endDate)) ||
+                (option2Checked && !isActive(off.startDate,off.endDate)))
+              )">
+              {{off.endDate.day + "/" + off.endDate.month + "/" + off.endDate.year}}
+              </td>
+              <td *ngIf="(
+                ((off.endDate.year > modelfilterStartDate.year && off.endDate.year < modelfilterEndDate.year) ||
+                (off.endDate.year == modelfilterStartDate.year  && off.endDate.year == modelfilterEndDate.year && off.endDate.month > modelfilterStartDate.month && off.endDate.month < modelfilterEndDate.month) ||
+                (off.endDate.year == modelfilterStartDate.year  && off.endDate.year == modelfilterEndDate.year && off.endDate.month == modelfilterStartDate.month && off.endDate.month == modelfilterEndDate.month && off.endDate.day >= modelfilterStartDate.day && off.endDate.day <= modelfilterEndDate.day) ||
+                (off.endDate.year == modelfilterStartDate.year  && off.endDate.year == modelfilterEndDate.year && off.endDate.month > modelfilterStartDate.month && off.endDate.month == modelfilterEndDate.month && off.endDate.day <= modelfilterEndDate.day) ||
+                (off.endDate.year == modelfilterStartDate.year  && off.endDate.year < modelfilterEndDate.year && off.endDate.month > modelfilterStartDate.month) ||
+                (off.endDate.year == modelfilterStartDate.year  && off.endDate.year < modelfilterEndDate.year && off.endDate.month == modelfilterStartDate.month && off.endDate.day >= modelfilterStartDate.day) ||
+                (off.endDate.year > modelfilterStartDate.year  && off.endDate.year == modelfilterEndDate.year && off.endDate.month < modelfilterEndDate.month) ||
+                (off.endDate.year > modelfilterStartDate.year  && off.endDate.year == modelfilterEndDate.year && off.endDate.month == modelfilterEndDate.month && off.endDate.day <= modelfilterEndDate.day)) &&
+                ((option1Checked && isActive(off.startDate,off.endDate)) ||
+                (option2Checked && !isActive(off.startDate,off.endDate)))
+              )">
+              <span class="badge rounded-pill text-bg-success" *ngIf="isActive(off.startDate,off.endDate)">Active</span>
+              <span class="badge rounded-pill text-bg-secondary" *ngIf="!isActive(off.startDate,off.endDate)">Inactive</span>
+              </td>
+              <td *ngIf="(
+                ((off.endDate.year > modelfilterStartDate.year && off.endDate.year < modelfilterEndDate.year) ||
+                (off.endDate.year == modelfilterStartDate.year  && off.endDate.year == modelfilterEndDate.year && off.endDate.month > modelfilterStartDate.month && off.endDate.month < modelfilterEndDate.month) ||
+                (off.endDate.year == modelfilterStartDate.year  && off.endDate.year == modelfilterEndDate.year && off.endDate.month == modelfilterStartDate.month && off.endDate.month == modelfilterEndDate.month && off.endDate.day >= modelfilterStartDate.day && off.endDate.day <= modelfilterEndDate.day) ||
+                (off.endDate.year == modelfilterStartDate.year  && off.endDate.year == modelfilterEndDate.year && off.endDate.month > modelfilterStartDate.month && off.endDate.month == modelfilterEndDate.month && off.endDate.day <= modelfilterEndDate.day) ||
+                (off.endDate.year == modelfilterStartDate.year  && off.endDate.year < modelfilterEndDate.year && off.endDate.month > modelfilterStartDate.month) ||
+                (off.endDate.year == modelfilterStartDate.year  && off.endDate.year < modelfilterEndDate.year && off.endDate.month == modelfilterStartDate.month && off.endDate.day >= modelfilterStartDate.day) ||
+                (off.endDate.year > modelfilterStartDate.year  && off.endDate.year == modelfilterEndDate.year && off.endDate.month < modelfilterEndDate.month) ||
+                (off.endDate.year > modelfilterStartDate.year  && off.endDate.year == modelfilterEndDate.year && off.endDate.month == modelfilterEndDate.month && off.endDate.day <= modelfilterEndDate.day)) &&
+                ((option1Checked && isActive(off.startDate,off.endDate)) ||
+                (option2Checked && !isActive(off.startDate,off.endDate)))
+              )">
+              <button class="btn btn-outline-primary me-2" (click)="open101(content101,indexOfOffer,off)">UPDATE</button>
+              </td>
+              <td *ngIf="(
+                ((off.endDate.year > modelfilterStartDate.year && off.endDate.year < modelfilterEndDate.year) ||
+                (off.endDate.year == modelfilterStartDate.year  && off.endDate.year == modelfilterEndDate.year && off.endDate.month > modelfilterStartDate.month && off.endDate.month < modelfilterEndDate.month) ||
+                (off.endDate.year == modelfilterStartDate.year  && off.endDate.year == modelfilterEndDate.year && off.endDate.month == modelfilterStartDate.month && off.endDate.month == modelfilterEndDate.month && off.endDate.day >= modelfilterStartDate.day && off.endDate.day <= modelfilterEndDate.day) ||
+                (off.endDate.year == modelfilterStartDate.year  && off.endDate.year == modelfilterEndDate.year && off.endDate.month > modelfilterStartDate.month && off.endDate.month == modelfilterEndDate.month && off.endDate.day <= modelfilterEndDate.day) ||
+                (off.endDate.year == modelfilterStartDate.year  && off.endDate.year < modelfilterEndDate.year && off.endDate.month > modelfilterStartDate.month) ||
+                (off.endDate.year == modelfilterStartDate.year  && off.endDate.year < modelfilterEndDate.year && off.endDate.month == modelfilterStartDate.month && off.endDate.day >= modelfilterStartDate.day) ||
+                (off.endDate.year > modelfilterStartDate.year  && off.endDate.year == modelfilterEndDate.year && off.endDate.month < modelfilterEndDate.month) ||
+                (off.endDate.year > modelfilterStartDate.year  && off.endDate.year == modelfilterEndDate.year && off.endDate.month == modelfilterEndDate.month && off.endDate.day <= modelfilterEndDate.day)) &&
+                ((option1Checked && isActive(off.startDate,off.endDate)) ||
+                (option2Checked && !isActive(off.startDate,off.endDate)))
+              )">
+              <button class="btn btn-outline-danger me-2" (click)="open102(content102,indexOfOffer)">DELETE</button>
+              </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
 </div>
 
 
@@ -79,21 +188,12 @@
           
           <label for="startDate" class="form-label">Start Date</label>
           <br />
-          <ngb-datepicker #dp [(ngModel)]="model" (navigate)="date1 = $event.next" name="startDate"></ngb-datepicker>
+          <ngb-datepicker #dp [(ngModel)]="modal_value.startDate" (navigate)="date1 = $event.next" name="startDate"></ngb-datepicker>
           <br />
-          <!-- <div class="input-group">
-            <input id="startDate" class="form-control" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker #dp="ngbDatepicker" formControlName="startDate">
-            <button class="btn btn-outline-secondary calendar" (keyup)="onKeyStartDate($event)" (click)="dp.toggle()" type="button"></button>
-          </div>
-          
-          <div class="input-group">
-            <input id="endDate" class="form-control" placeholder="yyyy-mm-dd" name="dp1" ngbDatepicker #dp1="ngbDatepicker" formControlName="endDate">
-            <button class="btn btn-outline-secondary calendar" (keyup)="onKeyEndDate($event)" (click)="dp1.toggle()" type="button"></button>
-          </div> -->
           <label for="endDate" class="form-label">End Date</label>
           <br />
-          <ngb-datepicker #dp [(ngModel)]="model1" (navigate)="date2 = $event.next" 
-          [minDate]="model" name="endDate"></ngb-datepicker>
+          <ngb-datepicker #dp [(ngModel)]="modal_value.endDate" (navigate)="date2 = $event.next" 
+          [minDate]="modal_value.startDate" name="endDate"></ngb-datepicker>
 
         </div>
       </form>
@@ -102,3 +202,48 @@
         <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button>
     </div>
   </ng-template>
+
+  <ng-template #content102 let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-title">Offer deletion</h4>
+        <button type="button" class="btn-close" aria-describedby="modal-title" (click)="modal.dismiss('Cross click')"></button>
+      </div>
+      <div class="modal-body">
+        <p><strong>Are you sure you want to delete this offer ?</strong></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss('cancel')">Cancel</button>
+        <button type="button" class="btn btn-danger" (click)="modal.close()">Ok</button>
+      </div>
+</ng-template>
+
+<ng-template #content101 let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Update Offer</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <form>
+      <div class="mb-3">
+        <label for="price" class="form-label">Price : </label>
+        <input type="number" class="form-control" (keyup)="onKeyPriceUpdate($event)" [(ngModel)]="curr_update_modal.price" name="price" />
+        
+        <label for="discount" class="form-label">Discount : </label>
+        <input type="number" class="form-control" (keyup)="onKeyDiscountUpdate($event)" [(ngModel)]="curr_update_modal.discount" name="discount"/>
+        
+        <label for="startDate" class="form-label">Start Date</label>
+        <br />
+        <ngb-datepicker #dp [(ngModel)]="curr_update_modal.startDate" (navigate)="date1 = $event.next" name="startDate"></ngb-datepicker>
+        <br />
+        <label for="endDate" class="form-label">End Date</label>
+        <br />
+        <ngb-datepicker #dp [(ngModel)]="curr_update_modal.endDate" (navigate)="date2 = $event.next" 
+        [minDate]="curr_update_modal.startDate" name="endDate"></ngb-datepicker>
+
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+      <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button>
+  </div>
+</ng-template>

@@ -6,7 +6,6 @@ import { AppComponent } from './app.component';
 import { LoginComponent } from './components/login/login.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { OffersComponent } from './components/offers/offers.component';
-import { OfferComponent } from './components/offer/offer.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
@@ -14,7 +13,6 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     AppComponent,
     LoginComponent,
     OffersComponent,
-    OfferComponent
   ],
   imports: [
     BrowserModule,
